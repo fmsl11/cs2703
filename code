@@ -1,1 +1,28 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+file_path = "EN_ODP-PR-Citz.xlsx"
+df = pd.read_excel(file_path, sheet_name=0)
+df.columns = df.columns.str.strip()
+
+if 'Year' in df.columns:
+    df['Year'] = pd.to_datetime(df['Year'], format='%Y')
+    df.set_index('Year', inplace=True)
+else:
+    df.index = pd.to_datetime(df.index, format='%Y')
+
+total_col = [col for col in df.columns if 'Total' in col or 'total' in col][0]
+immigration_series = df[total_col]
+
+print(immigration_series.describe())
+
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=immigration_series)
+plt.title("Immigration Trend to Canada Over the Years")
+plt.ylabel("Number of Immigrants")
+plt.xlabel("Year")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
 
